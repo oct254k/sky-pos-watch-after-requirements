@@ -6,12 +6,18 @@ import { DataGrid, Column } from "@/components/common/DataGrid";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { ActionButton } from "@/components/common/ActionBar";
 import { aiMappings } from "@/data/mock/aiMappings";
+import { toast } from "sonner";
 
 export default function ScrAi004() {
   const [data, setData] = useState(aiMappings.filter((m) => m.status !== "확정"));
 
   const handle = (id: string, action: string) => {
     setData((prev) => prev.map((r) => r.id === id ? { ...r, status: action === "확정" ? "확정" : "검토필요" } : r));
+    if (action === "확정") {
+      toast.success(`${id} 매핑이 확정되었습니다.`);
+      return;
+    }
+    toast.info(`${id} 재분류 요청이 반영되었습니다.`);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

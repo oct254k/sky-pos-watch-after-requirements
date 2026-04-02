@@ -23,7 +23,7 @@ const mockData: McProduct[] = [
 ];
 
 export default function ScrExt012() {
-  const [data] = useState<McProduct[]>(mockData);
+  const [data, setData] = useState<McProduct[]>(mockData);
   const [searchName, setSearchName] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
 
@@ -36,11 +36,27 @@ export default function ScrExt012() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchName = !searchName || row.name.includes(searchName);
+        const matchCategory = !searchCategory || row.category.includes(searchCategory);
+        return matchName && matchCategory;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearchName("");
+    setSearchCategory("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">MC 판매품목(가격) 등록</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">품목명</label>
           <Input value={searchName} onChange={(e) => setSearchName(e.target.value)} placeholder="품목명" className="w-40" />

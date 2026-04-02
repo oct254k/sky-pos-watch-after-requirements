@@ -30,11 +30,30 @@ const columns: Column<TrendRow>[] = [
 export default function ScrInt036() {
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-01-31");
+  const [chartRows, setChartRows] = useState(chartData);
+  const [data, setData] = useState(tableData);
+
+  const handleSearch = () => {
+    const filteredTable = tableData.filter((row) => row.date >= startDate && row.date <= endDate);
+    const filteredChart = chartData.filter((row) => {
+      const mapped = `2025-${row.date.replace("/", "-")}`;
+      return mapped >= startDate && mapped <= endDate;
+    });
+    setData(filteredTable);
+    setChartRows(filteredChart);
+  };
+
+  const handleReset = () => {
+    setStartDate("2025-01-01");
+    setEndDate("2025-01-31");
+    setChartRows(chartData);
+    setData(tableData);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">매출 추이 분석</h2>
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">시작일</label>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-40" />
@@ -46,7 +65,7 @@ export default function ScrInt036() {
       </SearchPanel>
       <ChartCard title="매출 추이 (단위: 만원)">
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData}>
+          <LineChart data={chartRows}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
@@ -56,7 +75,7 @@ export default function ScrInt036() {
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
-      <DataGrid columns={columns} data={tableData as unknown as Record<string, unknown>[]} />
+      <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} />
     </div>
   );
 }

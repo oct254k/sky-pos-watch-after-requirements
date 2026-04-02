@@ -6,6 +6,7 @@ import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type Row = Record<string, unknown>;
 
@@ -26,12 +27,30 @@ const mockData: Row[] = [
 
 export default function ScrErp004() {
   const [search, setSearch] = useState({ roomName: "", floor: "", companyName: "", contractStatus: "" });
+  const [data, setData] = useState<Row[]>(mockData);
+
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        if (search.roomName && !String(row.roomName ?? "").includes(search.roomName)) return false;
+        if (search.floor && !String(row.floor ?? "").includes(search.floor)) return false;
+        if (search.companyName && !String(row.companyName ?? "").includes(search.companyName)) return false;
+        if (search.contractStatus && !String(row.contractStatus ?? "").includes(search.contractStatus)) return false;
+        return true;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearch({ roomName: "", floor: "", companyName: "", contractStatus: "" });
+    setData(mockData);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">SCR-ERP-004 공간/호실 기준 계약 조회</h2>
       <MockBanner message="임대ERP 연계 데이터 - 읽기 전용" />
-      <SearchPanel onSearch={() => {}} onReset={() => setSearch({ roomName: "", floor: "", companyName: "", contractStatus: "" })}>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         
         <div className="flex flex-col gap-1">
           <label className="text-xs text-muted-foreground">호실명</label>
@@ -70,9 +89,9 @@ export default function ScrErp004() {
           />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={mockData} />
+      <DataGrid columns={columns} data={data} />
       <ActionBar>
-        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

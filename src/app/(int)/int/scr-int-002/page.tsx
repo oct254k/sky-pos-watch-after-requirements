@@ -25,12 +25,12 @@ export default function ScrInt002() {
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">매출추이 현황 분석</h2>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
         {kpis.map((k) => (
           <Card key={k.label}>
             <CardContent className="pt-4">
               <p className="text-xs text-muted-foreground">{k.label}</p>
-              <p className="mt-1 text-2xl font-bold">{k.value}</p>
+              <p className="mt-1 text-xl font-bold sm:text-2xl">{k.value}</p>
               {k.change && (
                 <p className={`text-xs ${k.positive ? "text-green-600" : "text-red-600"}`}>{k.change}</p>
               )}
@@ -39,7 +39,7 @@ export default function ScrInt002() {
         ))}
       </div>
       <ChartCard title="일별 매출 추이 (단위: 만원)">
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={280}>
           <LineChart data={dailyData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />

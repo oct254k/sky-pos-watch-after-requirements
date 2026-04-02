@@ -5,6 +5,7 @@ import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 interface DutyFreeRate { id: string; companyName: string; storeName: string; category: string; rate: number; minRent: number; effectiveDate: string; status: string; }
 
@@ -38,7 +39,7 @@ export default function ScrInt008() {
           <Input placeholder="검색어" value={keyword} onChange={(e) => setKeyword(e.target.value)} className="w-60" />
         </div>
       </SearchPanel>
-      <ActionBar><ActionButton label="요율 등록" onClick={() => alert("등록 (Mock)")} /></ActionBar>
+      <ActionBar><ActionButton label="신규 등록" onClick={() => toast.success("요율 등록 화면을 준비했습니다.")} /></ActionBar>
       <DataGrid columns={columns} data={filtered as unknown as Record<string, unknown>[]} />
     </div>
   );

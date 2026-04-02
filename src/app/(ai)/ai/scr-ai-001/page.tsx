@@ -31,24 +31,27 @@ const accuracyData = [
 
 export default function ScrAi001() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden">
       <MockBanner message="AI 분석 결과 - Mock 데이터" />
-      <h2 className="text-lg font-bold">AI 서비스 통합 현황 대시보드</h2>
+      <div className="space-y-1">
+        <h2 className="text-[18px] font-bold tracking-[-0.02em] sm:text-lg">AI 서비스 통합 현황 대시보드</h2>
+        <p className="text-xs text-muted-foreground sm:text-sm">주요 운영 지표와 정확도 추이를 한 화면에서 확인합니다.</p>
+      </div>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {kpi.map((k) => (
-          <Card key={k.label}>
+          <Card key={k.label} className="min-w-0">
             <CardContent className="pt-4">
               <p className="text-xs text-muted-foreground">{k.label}</p>
-              <p className={`text-2xl font-bold ${k.color}`}>{k.value}</p>
+              <p className={`text-[22px] font-bold leading-none sm:text-2xl ${k.color}`}>{k.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <ChartCard title="월별 탐지/매핑 건수">
-          <ResponsiveContainer width="100%" height={250}>
+        <ChartCard title="월별 탐지/매핑 건수" className="min-w-0">
+          <ResponsiveContainer width="100%" height={220}>
             <BarChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" fontSize={12} />
@@ -60,8 +63,8 @@ export default function ScrAi001() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="AI 정확도 추이">
-          <ResponsiveContainer width="100%" height={250}>
+        <ChartCard title="AI 정확도 추이" className="min-w-0">
+          <ResponsiveContainer width="100%" height={220}>
             <LineChart data={accuracyData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" fontSize={12} />

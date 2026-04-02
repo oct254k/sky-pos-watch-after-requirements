@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const roles = ["시스템관리자", "운영팀", "임대팀", "기술팀", "업체관리자"];
 const menus = [
@@ -34,7 +35,7 @@ export default function ScrInt078() {
     <div className="space-y-4">
       <h2 className="text-lg font-bold">권한 관리</h2>
       <div className="flex justify-end">
-        <Button size="sm" onClick={() => alert("저장 완료 (Mock)")}>권한 저장</Button>
+        <Button size="sm" onClick={() => toast.success("권한 정보가 저장되었습니다.")}>저장</Button>
       </div>
       <Card>
         <CardContent className="pt-4 overflow-x-auto">

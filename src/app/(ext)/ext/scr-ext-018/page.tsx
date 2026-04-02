@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { rentCalcs, RentCalc } from "@/data/mock";
 
 export default function ScrExt018() {
-  const [data] = useState<RentCalc[]>(rentCalcs.slice(0, 3));
+  const initialData = rentCalcs.slice(0, 3);
+  const [data, setData] = useState<RentCalc[]>(initialData);
   const [yearMonth, setYearMonth] = useState("2025-01");
   const [companyName, setCompanyName] = useState("");
 
@@ -24,11 +25,27 @@ export default function ScrExt018() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
+  const handleSearch = () => {
+    setData(
+      initialData.filter((row) => {
+        const matchMonth = !yearMonth || row.yearMonth === yearMonth;
+        const matchCompany = !companyName || row.companyName.includes(companyName);
+        return matchMonth && matchCompany;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setYearMonth("2025-01");
+    setCompanyName("");
+    setData(initialData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">부과임대료 현황 조회</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">년월</label>
           <Input type="month" value={yearMonth} onChange={(e) => setYearMonth(e.target.value)} className="w-40" />

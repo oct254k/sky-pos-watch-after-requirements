@@ -25,7 +25,7 @@ const mockData: McRentSummary[] = [
 ];
 
 export default function ScrExt016() {
-  const [data] = useState<McRentSummary[]>(mockData);
+  const [data, setData] = useState<McRentSummary[]>(mockData);
   const [yearMonth, setYearMonth] = useState("2025-01");
   const [mcCompany, setMcCompany] = useState("");
 
@@ -40,11 +40,27 @@ export default function ScrExt016() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchMonth = !yearMonth || row.yearMonth === yearMonth;
+        const matchCompany = !mcCompany || row.mcCompany.includes(mcCompany);
+        return matchMonth && matchCompany;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setYearMonth("2025-01");
+    setMcCompany("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">MC 부과임대료 통합 조회</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">년월</label>
           <Input type="month" value={yearMonth} onChange={(e) => setYearMonth(e.target.value)} className="w-40" />

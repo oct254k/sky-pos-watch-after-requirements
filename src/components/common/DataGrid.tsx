@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useSearchFeedback } from "./SearchFeedbackProvider";
 
 export interface Column<T> {
   key: string;
@@ -27,6 +29,8 @@ interface DataGridProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onRowClick?: (row: any) => void;
   keyField?: string;
+  loading?: boolean;
+  loadingMessage?: string;
 }
 
 export function DataGrid({
@@ -35,7 +39,10 @@ export function DataGrid({
   pageSize = 10,
   onRowClick,
   keyField = "id",
+  loading,
+  loadingMessage = "데이터를 불러오는 중입니다",
 }: DataGridProps) {
+  const feedback = useSearchFeedback();
   const [page, setPage] = useState(0);
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -56,9 +63,12 @@ export function DataGrid({
     else { setSortKey(key); setSortDir("asc"); }
   };
 
+  const isLoading = loading ?? feedback?.loading ?? false;
+  const resolvedLoadingMessage = loading !== undefined ? loadingMessage : feedback?.loadingMessage ?? loadingMessage;
+
   return (
-    <div>
-      <div className="rounded-md border">
+    <div className="relative">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -100,8 +110,16 @@ export function DataGrid({
           </TableBody>
         </Table>
       </div>
+      {isLoading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-md bg-white/70 backdrop-blur-[1px]">
+          <div className="mx-4 flex items-center gap-2 rounded-full border border-[#d7e2ee] bg-white px-4 py-2 text-center text-sm font-medium text-[#334155] shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#1d4f91]" />
+            {resolvedLoadingMessage}
+          </div>
+        </div>
+      )}
       {totalPages > 1 && (
-        <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+        <div className="mt-2 flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>총 {data.length}건 (페이지 {page + 1}/{totalPages})</span>
           <div className="flex gap-1">
             <Button size="sm" variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>이전</Button>

@@ -26,7 +26,7 @@ const mockData: YearlyRentCalc[] = [
 ];
 
 export default function ScrExt019() {
-  const [data] = useState<YearlyRentCalc[]>(mockData);
+  const [data, setData] = useState<YearlyRentCalc[]>(mockData);
   const [year, setYear] = useState("2024");
   const [companyName, setCompanyName] = useState("");
 
@@ -42,11 +42,27 @@ export default function ScrExt019() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchYear = !year || row.year === year;
+        const matchCompany = !companyName || row.companyName.includes(companyName);
+        return matchYear && matchCompany;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setYear("2024");
+    setCompanyName("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">연정산 임대료 산정내역 조회</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">연도</label>
           <Input value={year} onChange={(e) => setYear(e.target.value)} placeholder="2024" className="w-32" />

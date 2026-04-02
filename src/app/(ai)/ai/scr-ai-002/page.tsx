@@ -6,12 +6,18 @@ import { DataGrid, Column } from "@/components/common/DataGrid";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { ActionButton } from "@/components/common/ActionBar";
 import { aiMappings } from "@/data/mock/aiMappings";
+import { toast } from "sonner";
 
 export default function ScrAi002() {
   const [data, setData] = useState(aiMappings);
 
   const handleConfirm = (id: string) => {
     setData((prev) => prev.map((r) => r.id === id ? { ...r, status: "확정" } : r));
+    toast.success(`${id} 매핑이 확정되었습니다.`);
+  };
+
+  const handleReclassify = (id: string) => {
+    toast.info(`${id} 재분류 요청이 접수되었습니다.`);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +34,7 @@ export default function ScrAi002() {
     { key: "_action", label: "작업", width: "140px", render: (r) => (
       <div className="flex gap-1">
         <ActionButton label="확정" onClick={() => handleConfirm(r.id)} />
-        <ActionButton label="재분류" variant="outline" onClick={() => alert(`${r.id} 재분류`)} />
+        <ActionButton label="재분류" variant="outline" onClick={() => handleReclassify(r.id)} />
       </div>
     )},
   ];

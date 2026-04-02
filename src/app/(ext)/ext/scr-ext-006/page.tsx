@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
@@ -8,14 +8,17 @@ import { ModalPopup } from "@/components/common/ModalPopup";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { receipts as mockReceipts, Receipt } from "@/data/mock";
+import { toast } from "sonner";
 
 export default function ScrExt006() {
   const [data, setData] = useState<Receipt[]>(mockReceipts);
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-01-31");
   const [storeName, setStoreName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<Receipt | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
   const columns: Column<Receipt>[] = [
     { key: "id", label: "영수증번호", width: "110px" },
@@ -28,7 +31,7 @@ export default function ScrExt006() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
-  const handleSearch = () => {
+  const applySearch = () => {
     let filtered = [...mockReceipts];
     if (startDate) filtered = filtered.filter((r) => r.date >= startDate);
     if (endDate) filtered = filtered.filter((r) => r.date <= endDate);
@@ -36,11 +39,24 @@ export default function ScrExt006() {
     setData(filtered);
   };
 
+  const handleSearch = () => {
+    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    setIsLoading(true);
+    searchTimerRef.current = window.setTimeout(() => {
+      applySearch();
+      setIsLoading(false);
+      searchTimerRef.current = null;
+    }, 800);
+  };
+
   const handleReset = () => {
+    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
     setStartDate("2025-01-01");
     setEndDate("2025-01-31");
     setStoreName("");
     setData(mockReceipts);
+    setIsLoading(false);
+    searchTimerRef.current = null;
   };
 
   const handleRowClick = (row: Receipt) => {
@@ -51,7 +67,7 @@ export default function ScrExt006() {
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">영수증 조회</h2>
-      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
+      <SearchPanel loading={isLoading} onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">시작일</label>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-40" />
@@ -65,35 +81,93 @@ export default function ScrExt006() {
           <Input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="매장명" className="w-40" />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} onRowClick={(row) => handleRowClick(row as unknown as Receipt)} />
+      <DataGrid
+        columns={columns}
+        data={data as unknown as Record<string, unknown>[]}
+        onRowClick={(row) => handleRowClick(row as unknown as Receipt)}
+        loading={isLoading}
+        loadingMessage="영수증 데이터를 불러오는 중입니다"
+      />
       <ActionBar>
-        <ActionButton label="엑셀" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
 
       <ModalPopup open={modalOpen} onClose={() => setModalOpen(false)} title="영수증 상세" wide>
         {selected && (
-          <div className="space-y-3 text-sm">
-            <div className="grid grid-cols-2 gap-2">
-              <div><span className="text-muted-foreground">영수증번호:</span> {selected.id}</div>
-              <div><span className="text-muted-foreground">매장:</span> {selected.storeName}</div>
-              <div><span className="text-muted-foreground">일시:</span> {selected.date} {selected.time}</div>
-              <div><span className="text-muted-foreground">결제수단:</span> {selected.paymentMethod}</div>
-              <div><span className="text-muted-foreground">VAN TID:</span> {selected.vanTid}</div>
-              <div><span className="text-muted-foreground">상태:</span> <StatusBadge status={selected.status} /></div>
-            </div>
-            <div className="rounded border p-2">
-              <p className="mb-1 font-medium">품목 내역</p>
-              {selected.items.map((item, i) => (
-                <div key={i} className="flex justify-between">
-                  <span>{item.name} x {item.qty}</span>
-                  <span>{(item.price * item.qty).toLocaleString()}원</span>
+          <div className="space-y-4">
+            <section className="rounded-[14px] border border-[#dbe4ee] bg-white px-4 py-4">
+              <div className="mb-3 flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-[13px] font-semibold text-[#0f172a]">기본 요약 정보</div>
                 </div>
-              ))}
-              <div className="mt-1 border-t pt-1 font-medium flex justify-between">
-                <span>합계</span>
-                <span>{selected.totalAmount.toLocaleString()}원</span>
+                <StatusBadge status={selected.status} />
               </div>
-            </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">영수증번호</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.id}</div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">매장</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.storeName}</div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">일시</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">
+                    {selected.date} {selected.time}
+                  </div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">결제수단</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.paymentMethod}</div>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-[14px] border border-[#dbe4ee] bg-white px-4 py-4">
+              <div className="mb-3">
+                <div className="text-[13px] font-semibold text-[#0f172a]">결제/연계 정보</div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">VAN TID</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.vanTid}</div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">총 결제금액</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.totalAmount.toLocaleString()}원</div>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-[14px] border border-[#dbe4ee] bg-white px-4 py-4">
+              <div className="mb-3">
+                <div className="text-[13px] font-semibold text-[#0f172a]">품목 내역</div>
+                <div className="mt-1 text-xs text-[#64748b]">영수증에 포함된 품목과 합계를 확인합니다.</div>
+              </div>
+
+              <div className="overflow-hidden rounded-[12px] border border-[#e5edf5]">
+                <div className="divide-y divide-[#e9eef5]">
+                  {selected.items.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between gap-4 bg-white px-3 py-3 text-sm">
+                      <div>
+                        <div className="font-medium text-[#0f172a]">{item.name}</div>
+                        <div className="mt-0.5 text-xs text-[#64748b]">수량 {item.qty}개</div>
+                      </div>
+                      <div className="text-right font-semibold text-[#0f172a]">
+                        {(item.price * item.qty).toLocaleString()}원
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between border-t border-[#e5edf5] bg-[#f8fbff] px-3 py-3 text-sm font-semibold text-[#0f172a]">
+                  <span>합계</span>
+                  <span>{selected.totalAmount.toLocaleString()}원</span>
+                </div>
+              </div>
+            </section>
           </div>
         )}
       </ModalPopup>

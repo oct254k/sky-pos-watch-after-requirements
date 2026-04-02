@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
 import { rentCalcs, RentCalc } from "@/data/mock";
+import { toast } from "sonner";
 
 export default function ScrInt028() {
   const [yearMonth, setYearMonth] = useState("");
@@ -17,8 +18,13 @@ export default function ScrInt028() {
   };
 
   const handleCalc = () => {
+    const pending = data.filter((r) => r.status === "조정중");
+    if (pending.length === 0) {
+      toast.warning("집계할 조정중 데이터가 없습니다.");
+      return;
+    }
     setData((prev) => prev.map((r) => r.status === "조정중" ? { ...r, status: "산정완료" } : r));
-    alert("집계 처리가 완료되었습니다. (Mock)");
+    toast.success(`${pending.length}건 집계 처리가 완료되었습니다.`);
   };
 
   const columns: Column<RentCalc>[] = [

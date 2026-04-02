@@ -6,6 +6,7 @@ import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type Row = Record<string, unknown>;
 
@@ -26,12 +27,29 @@ const mockData: Row[] = [
 
 export default function ScrErp003() {
   const [search, setSearch] = useState({ contractNo: "", companyName: "", renewalYn: "" });
+  const [data, setData] = useState<Row[]>(mockData);
+
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        if (search.contractNo && !String(row.contractNo ?? "").includes(search.contractNo)) return false;
+        if (search.companyName && !String(row.companyName ?? "").includes(search.companyName)) return false;
+        if (search.renewalYn && !String(row.renewalYn ?? "").includes(search.renewalYn)) return false;
+        return true;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearch({ contractNo: "", companyName: "", renewalYn: "" });
+    setData(mockData);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">SCR-ERP-003 계약만료/갱신 알림 조회</h2>
       <MockBanner message="임대ERP 연계 데이터 - 읽기 전용" />
-      <SearchPanel onSearch={() => {}} onReset={() => setSearch({ contractNo: "", companyName: "", renewalYn: "" })}>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         
         <div className="flex flex-col gap-1">
           <label className="text-xs text-muted-foreground">계약번호</label>
@@ -61,9 +79,9 @@ export default function ScrErp003() {
           />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={mockData} />
+      <DataGrid columns={columns} data={data} />
       <ActionBar>
-        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

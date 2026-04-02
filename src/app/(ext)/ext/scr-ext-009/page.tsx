@@ -7,8 +7,11 @@ import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { dailyCloses as mockDailyCloses, DailyClose } from "@/data/mock";
+import { toast } from "sonner";
+import { useConfirm } from "@/components/common/ConfirmProvider";
 
 export default function ScrExt009() {
+  const confirm = useConfirm();
   const [data, setData] = useState<DailyClose[]>(mockDailyCloses);
   const [searchDate, setSearchDate] = useState("2025-01-15");
   const [searchStore, setSearchStore] = useState("");
@@ -39,17 +42,35 @@ export default function ScrExt009() {
   };
 
   const handleConfirm = () => {
+    const pending = data.filter((d) => d.status === "미확정");
+    if (pending.length === 0) {
+      toast.warning("미확정 건이 없습니다.");
+      return;
+    }
     setData((prev) =>
       prev.map((d) => (d.status === "미확정" ? { ...d, status: "확정", confirmedBy: "사용자", confirmedAt: new Date().toISOString().slice(0, 16).replace("T", " ") } : d))
     );
-    alert("미확정 건이 확정되었습니다.");
+    toast.success(`${pending.length}건이 확정되었습니다.`);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
+    const confirmedRows = data.filter((d) => d.status === "확정");
+    if (confirmedRows.length === 0) {
+      toast.warning("확정된 건이 없습니다.");
+      return;
+    }
+    const confirmed = await confirm({
+      title: "확정 취소",
+      message: `${confirmedRows.length}건의 확정을 취소하시겠습니까?`,
+      confirmLabel: "취소 처리",
+      cancelLabel: "닫기",
+      tone: "warning",
+    });
+    if (!confirmed) return;
     setData((prev) =>
       prev.map((d) => (d.status === "확정" ? { ...d, status: "미확정", confirmedBy: "", confirmedAt: "" } : d))
     );
-    alert("확정이 취소되었습니다.");
+    toast.success(`${confirmedRows.length}건의 확정이 취소되었습니다.`);
   };
 
   return (
@@ -69,7 +90,7 @@ export default function ScrExt009() {
       <ActionBar>
         <ActionButton label="확정" onClick={handleConfirm} />
         <ActionButton label="취소" variant="destructive" onClick={handleCancel} />
-        <ActionButton label="엑셀" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

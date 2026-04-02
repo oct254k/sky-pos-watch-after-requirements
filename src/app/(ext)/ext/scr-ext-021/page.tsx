@@ -23,7 +23,7 @@ const mockData: Document[] = [
 ];
 
 export default function ScrExt021() {
-  const [data] = useState<Document[]>(mockData);
+  const [data, setData] = useState<Document[]>(mockData);
   const [searchTitle, setSearchTitle] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
 
@@ -37,11 +37,27 @@ export default function ScrExt021() {
     { key: "createdAt", label: "등록일", width: "110px" },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchTitle = !searchTitle || row.title.includes(searchTitle);
+        const matchCategory = !searchCategory || row.category.includes(searchCategory);
+        return matchTitle && matchCategory;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearchTitle("");
+    setSearchCategory("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">자료실</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">제목</label>
           <Input value={searchTitle} onChange={(e) => setSearchTitle(e.target.value)} placeholder="제목 검색" className="w-48" />

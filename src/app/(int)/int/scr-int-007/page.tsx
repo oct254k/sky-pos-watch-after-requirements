@@ -37,11 +37,41 @@ const columns: Column<RateRow>[] = [
 
 export default function ScrInt007() {
   const [keyword, setKeyword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState(rateData);
+
+  const applySearch = () => {
+    const matchesKeyword = (row: RateRow) =>
+      !keyword ||
+      [row.companyName, row.storeName, row.category, row.status]
+        .map((value) => String(value ?? "").toLowerCase())
+        .some((value) => value.includes(keyword.toLowerCase()));
+
+    setData({
+      general: rateData.general.filter(matchesKeyword),
+      dutyfree: rateData.dutyfree.filter(matchesKeyword),
+      online: rateData.online.filter(matchesKeyword),
+    });
+  };
+
+  const handleSearch = () => {
+    setIsLoading(true);
+    window.setTimeout(() => {
+      applySearch();
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const handleReset = () => {
+    setKeyword("");
+    setData(rateData);
+    setIsLoading(false);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">영업요율 관리</h2>
-      <SearchPanel onSearch={() => {}} onReset={() => setKeyword("")}>
+      <SearchPanel {...({ loading: isLoading } as Record<string, unknown>)} onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">업체명/매장명</label>
           <Input placeholder="검색어" value={keyword} onChange={(e) => setKeyword(e.target.value)} className="w-60" />
@@ -54,16 +84,16 @@ export default function ScrInt007() {
           <TabsTrigger value="online">온라인면세점</TabsTrigger>
         </TabsList>
         <TabsContent value="general">
-          <ActionBar><ActionButton label="요율 등록" /></ActionBar>
-          <DataGrid columns={columns} data={rateData.general as unknown as Record<string, unknown>[]} />
+          <ActionBar><ActionButton label="신규 등록" /></ActionBar>
+          <DataGrid {...({ loading: isLoading, loadingMessage: "데이터를 불러오는 중입니다" } as Record<string, unknown>)} columns={columns} data={data.general as unknown as Record<string, unknown>[]} />
         </TabsContent>
         <TabsContent value="dutyfree">
-          <ActionBar><ActionButton label="요율 등록" /></ActionBar>
-          <DataGrid columns={columns} data={rateData.dutyfree as unknown as Record<string, unknown>[]} />
+          <ActionBar><ActionButton label="신규 등록" /></ActionBar>
+          <DataGrid {...({ loading: isLoading, loadingMessage: "데이터를 불러오는 중입니다" } as Record<string, unknown>)} columns={columns} data={data.dutyfree as unknown as Record<string, unknown>[]} />
         </TabsContent>
         <TabsContent value="online">
-          <ActionBar><ActionButton label="요율 등록" /></ActionBar>
-          <DataGrid columns={columns} data={rateData.online as unknown as Record<string, unknown>[]} />
+          <ActionBar><ActionButton label="신규 등록" /></ActionBar>
+          <DataGrid {...({ loading: isLoading, loadingMessage: "데이터를 불러오는 중입니다" } as Record<string, unknown>)} columns={columns} data={data.online as unknown as Record<string, unknown>[]} />
         </TabsContent>
       </Tabs>
     </div>

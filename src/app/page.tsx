@@ -1,12 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { PortalHub } from "@/components/common/PortalHub";
 
 export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/ext/scr-ext-001");
-  }, [router]);
-  return null;
+  return <PortalHub mode="root" />;
 }

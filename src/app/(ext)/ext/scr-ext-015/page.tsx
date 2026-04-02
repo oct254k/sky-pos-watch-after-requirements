@@ -24,7 +24,7 @@ const mockData: McReconciliation[] = [
 ];
 
 export default function ScrExt015() {
-  const [data] = useState<McReconciliation[]>(mockData);
+  const [data, setData] = useState<McReconciliation[]>(mockData);
   const [closeDate, setCloseDate] = useState("2025-01-15");
   const [storeName, setStoreName] = useState("");
 
@@ -38,11 +38,27 @@ export default function ScrExt015() {
     { key: "status", label: "상태", width: "100px", render: (row) => <StatusBadge status={row.status} /> },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchDate = !closeDate || row.closeDate === closeDate;
+        const matchStore = !storeName || row.storeName.includes(storeName);
+        return matchDate && matchStore;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setCloseDate("2025-01-15");
+    setStoreName("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">MC 매출/일마감 대사 관리</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">마감일</label>
           <Input type="date" value={closeDate} onChange={(e) => setCloseDate(e.target.value)} className="w-40" />

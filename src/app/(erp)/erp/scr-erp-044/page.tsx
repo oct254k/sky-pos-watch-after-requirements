@@ -6,6 +6,7 @@ import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type Row = Record<string, unknown>;
 
@@ -28,12 +29,43 @@ const mockData: Row[] = [
 
 export default function ScrErp044() {
   const [search, setSearch] = useState({ storeName: "", detectDate: "", anomalyType: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<Row[]>(mockData);
+
+  const applySearch = () => {
+    const filtered = mockData.filter((row) => {
+      const matchesStoreName =
+        !search.storeName || String(row.storeName ?? "").toLowerCase().includes(search.storeName.toLowerCase());
+      const matchesDetectDate =
+        !search.detectDate || String(row.detectDate ?? "").toLowerCase().includes(search.detectDate.toLowerCase());
+      const matchesAnomalyType =
+        !search.anomalyType || String(row.anomalyType ?? "").toLowerCase().includes(search.anomalyType.toLowerCase());
+
+      return matchesStoreName && matchesDetectDate && matchesAnomalyType;
+    });
+
+    setData(filtered);
+  };
+
+  const handleSearch = () => {
+    setIsLoading(true);
+    window.setTimeout(() => {
+      applySearch();
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const handleReset = () => {
+    setSearch({ storeName: "", detectDate: "", anomalyType: "" });
+    setData(mockData);
+    setIsLoading(false);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">SCR-ERP-044 이상징후 탐지 현황 조회</h2>
       <MockBanner message="임대ERP 연계 데이터 - 읽기 전용" />
-      <SearchPanel onSearch={() => {}} onReset={() => setSearch({ storeName: "", detectDate: "", anomalyType: "" })}>
+      <SearchPanel {...({ loading: isLoading } as Record<string, unknown>)} onSearch={handleSearch} onReset={handleReset}>
         
         <div className="flex flex-col gap-1">
           <label className="text-xs text-muted-foreground">매장명</label>
@@ -63,9 +95,9 @@ export default function ScrErp044() {
           />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={mockData} />
+      <DataGrid {...({ loading: isLoading, loadingMessage: "데이터를 불러오는 중입니다" } as Record<string, unknown>)} columns={columns} data={data} />
       <ActionBar>
-        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

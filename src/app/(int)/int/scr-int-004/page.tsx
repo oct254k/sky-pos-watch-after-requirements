@@ -18,11 +18,34 @@ const weeklyData = [
 export default function ScrInt004() {
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-01-31");
+  const [kpis, setKpis] = useState({
+    totalSales: "99.5억원",
+    yoy: "+12.8%",
+    daily: "3.2억원",
+  });
+  const [chartRows, setChartRows] = useState(weeklyData);
+
+  const handleSearch = () => {
+    const inRange = startDate <= "2025-01-31" && endDate >= "2025-01-01";
+    setChartRows(inRange ? weeklyData : []);
+    setKpis(
+      inRange
+        ? { totalSales: "99.5억원", yoy: "+12.8%", daily: "3.2억원" }
+        : { totalSales: "0억원", yoy: "0.0%", daily: "0억원" }
+    );
+  };
+
+  const handleReset = () => {
+    setStartDate("2025-01-01");
+    setEndDate("2025-01-31");
+    setChartRows(weeklyData);
+    setKpis({ totalSales: "99.5억원", yoy: "+12.8%", daily: "3.2억원" });
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">기간별 매출 추세 분석</h2>
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">시작일</label>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-40" />
@@ -36,25 +59,25 @@ export default function ScrInt004() {
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-muted-foreground">기간 총매출</p>
-            <p className="mt-1 text-2xl font-bold">99.5억원</p>
+            <p className="mt-1 text-2xl font-bold">{kpis.totalSales}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-muted-foreground">전년 동기 대비</p>
-            <p className="mt-1 text-2xl font-bold text-green-600">+12.8%</p>
+            <p className="mt-1 text-2xl font-bold text-green-600">{kpis.yoy}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-muted-foreground">일평균 매출</p>
-            <p className="mt-1 text-2xl font-bold">3.2억원</p>
+            <p className="mt-1 text-2xl font-bold">{kpis.daily}</p>
           </CardContent>
         </Card>
       </div>
       <ChartCard title="주간 매출 추세 비교 (단위: 백만원)">
         <ResponsiveContainer width="100%" height={350}>
-          <AreaChart data={weeklyData}>
+          <AreaChart data={chartRows}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="week" />
             <YAxis />

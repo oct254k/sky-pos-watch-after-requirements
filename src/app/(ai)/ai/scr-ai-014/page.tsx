@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { MockBanner } from "@/components/common/MockBanner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SearchPanel } from "@/components/common/SearchPanel";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 const dummyResults = [
   { code: "STD-BEV-030", category: "음료>커피>콜드브루", confidence: 95 },
@@ -30,22 +30,25 @@ export default function ScrAi014() {
       <MockBanner message="AI 분석 결과 - Mock 데이터" />
       <h2 className="text-lg font-bold">LLM 품목코드 추천/생성</h2>
 
-      <Card>
-        <CardHeader><CardTitle className="text-sm">품목명 입력</CardTitle></CardHeader>
-        <CardContent>
-          <div className="flex gap-2">
-            <Input
-              placeholder="품목명을 입력하세요 (예: 콜드브루 아이스)"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={handleSearch} disabled={loading}>
-              {loading ? "분석중..." : "추천 받기"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <SearchPanel
+        title="품목코드 추천 조건"
+        onSearch={handleSearch}
+        onReset={() => {
+          setQuery("");
+          setResults([]);
+        }}
+        loading={loading}
+      >
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-[#64748b]">품목명</label>
+          <Input
+            placeholder="품목명을 입력하세요 (예: 콜드브루 아이스)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="h-9 bg-white"
+          />
+        </div>
+      </SearchPanel>
 
       {results.length > 0 && (
         <div className="space-y-2">

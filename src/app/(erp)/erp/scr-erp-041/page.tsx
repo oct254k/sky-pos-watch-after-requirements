@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MockBanner } from "@/components/common/MockBanner";
 import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type Row = Record<string, unknown>;
 
@@ -28,13 +29,51 @@ const mockData: Row[] = [
 ];
 
 export default function ScrErp041() {
-  const [search, setSearch] = useState({ storeName: "", receiveDate: "", receiveStatus: "" });
+  const initialSearch = { storeName: "", receiveDate: "", receiveStatus: "" };
+  const [search, setSearch] = useState(initialSearch);
+  const [data, setData] = useState<Row[]>(mockData);
+  const [isLoading, setIsLoading] = useState(false);
+  const searchTimerRef = useRef<number | null>(null);
+
+  const clearSearchTimer = () => {
+    if (searchTimerRef.current !== null) {
+      window.clearTimeout(searchTimerRef.current);
+      searchTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => clearSearchTimer, []);
+
+  const applySearch = () => {
+    clearSearchTimer();
+    setIsLoading(true);
+    searchTimerRef.current = window.setTimeout(() => {
+      const filtered = mockData.filter((row) =>
+        Object.entries(search).every(([key, value]) => {
+          const searchValue = String(value ?? "").trim().toLowerCase();
+          if (!searchValue) return true;
+          return String(row[key] ?? "").toLowerCase().includes(searchValue);
+        })
+      );
+
+      setData(filtered);
+      setIsLoading(false);
+      searchTimerRef.current = null;
+    }, 800);
+  };
+
+  const handleReset = () => {
+    clearSearchTimer();
+    setSearch(initialSearch);
+    setData(mockData);
+    setIsLoading(false);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">SCR-ERP-041 매출자료 수신 현황 조회</h2>
       <MockBanner message="임대ERP 연계 데이터 - 읽기 전용" />
-      <SearchPanel onSearch={() => {}} onReset={() => setSearch({ storeName: "", receiveDate: "", receiveStatus: "" })}>
+      <SearchPanel loading={isLoading} onSearch={applySearch} onReset={handleReset}>
         
         <div className="flex flex-col gap-1">
           <label className="text-xs text-muted-foreground">매장명</label>
@@ -64,9 +103,9 @@ export default function ScrErp041() {
           />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={mockData} />
+      <DataGrid columns={columns} data={data} loading={isLoading} loadingMessage="데이터를 불러오는 중입니다" />
       <ActionBar>
-        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

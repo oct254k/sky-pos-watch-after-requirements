@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface AgentStatus { id: string; name: string; storeId: string; storeName: string; companyName: string; status: "online" | "offline" | "error"; lastSync: string; version: string; }
 
@@ -59,7 +60,7 @@ export default function ScrInt048() {
                 <p>업체: {agent.companyName}</p>
                 <p>최종동기화: {agent.lastSync}</p>
                 <p>버전: {agent.version}</p>
-                {agent.status === "error" && <Button size="sm" variant="destructive" className="mt-2 h-6 text-xs" onClick={() => alert("재시작 요청 (Mock)")}>재시작</Button>}
+                {agent.status === "error" && <Button size="sm" variant="destructive" className="mt-2 h-6 text-xs" onClick={() => toast.success("재시작 요청이 접수되었습니다.")}>재시작</Button>}
               </CardContent>
             </Card>
           );

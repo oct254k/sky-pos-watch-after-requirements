@@ -23,7 +23,7 @@ const mockData: TaxRecord[] = [
 ];
 
 export default function ScrExt011() {
-  const [data] = useState<TaxRecord[]>(mockData);
+  const [data, setData] = useState<TaxRecord[]>(mockData);
   const [yearMonth, setYearMonth] = useState("2025-01");
   const [companyName, setCompanyName] = useState("");
 
@@ -37,11 +37,27 @@ export default function ScrExt011() {
     { key: "status", label: "상태", width: "100px" },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchMonth = !yearMonth || row.yearMonth === yearMonth;
+        const matchCompany = !companyName || row.companyName.includes(companyName);
+        return matchMonth && matchCompany;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setYearMonth("2025-01");
+    setCompanyName("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">연과세표준 증명내역 관리</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">년월</label>
           <Input type="month" value={yearMonth} onChange={(e) => setYearMonth(e.target.value)} className="w-40" />

@@ -7,8 +7,11 @@ import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { monthlyCloses as mockMonthlyCloses, MonthlyClose } from "@/data/mock";
+import { toast } from "sonner";
+import { useConfirm } from "@/components/common/ConfirmProvider";
 
 export default function ScrExt010() {
+  const confirm = useConfirm();
   const [data, setData] = useState<MonthlyClose[]>(mockMonthlyCloses);
   const [yearMonth, setYearMonth] = useState("2025-01");
 
@@ -35,7 +38,20 @@ export default function ScrExt010() {
     setData(mockMonthlyCloses);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    const pending = data.filter((m) => m.status === "진행중");
+    if (pending.length === 0) {
+      toast.warning("마감할 진행중 데이터가 없습니다.");
+      return;
+    }
+    const confirmed = await confirm({
+      title: "월마감 실행",
+      message: `${pending.length}건의 월마감을 실행하시겠습니까?`,
+      confirmLabel: "마감",
+      cancelLabel: "취소",
+      tone: "warning",
+    });
+    if (!confirmed) return;
     setData((prev) =>
       prev.map((m) =>
         m.status === "진행중"
@@ -43,7 +59,7 @@ export default function ScrExt010() {
           : m
       )
     );
-    alert("월마감이 완료되었습니다.");
+    toast.success("월마감이 완료되었습니다.");
   };
 
   return (
@@ -58,7 +74,7 @@ export default function ScrExt010() {
       <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} />
       <ActionBar>
         <ActionButton label="마감" onClick={handleClose} />
-        <ActionButton label="엑셀" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

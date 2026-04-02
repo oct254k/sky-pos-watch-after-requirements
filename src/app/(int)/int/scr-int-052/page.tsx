@@ -44,19 +44,45 @@ export default function ScrInt052() {
       <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} onRowClick={(row) => setSelected(row as unknown as AiDetection)} />
       <ModalPopup open={!!selected} onClose={() => setSelected(null)} title="이상거래 상세" wide>
         {selected && (
-          <div className="space-y-3 text-sm">
-            <div className="grid grid-cols-2 gap-2">
-              <div><span className="text-muted-foreground">유형:</span> {selected.type}</div>
-              <div><span className="text-muted-foreground">매장:</span> {selected.storeName}</div>
-              <div><span className="text-muted-foreground">업체:</span> {selected.companyName}</div>
-              <div><span className="text-muted-foreground">위험도:</span> <Badge className={riskColors[selected.riskLevel]} variant="outline">{selected.riskLevel} ({selected.score}점)</Badge></div>
-              <div><span className="text-muted-foreground">탐지시간:</span> {selected.detectedAt}</div>
-              <div><span className="text-muted-foreground">상태:</span> {selected.status}</div>
-            </div>
-            <div className="rounded border bg-muted/30 p-3">
-              <p className="font-medium">탐지 내용</p>
-              <p className="mt-1">{selected.description}</p>
-            </div>
+          <div className="space-y-4 text-sm">
+            <section className="rounded-[14px] border border-[#dbe4ee] bg-white px-4 py-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <div className="text-[13px] font-semibold text-[#0f172a]">탐지 요약 정보</div>
+                </div>
+                <StatusBadge status={selected.status} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">탐지ID / 유형</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.id} / {selected.type}</div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">매장 / 업체</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.storeName} / {selected.companyName}</div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">위험도 / 점수</div>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Badge className={riskColors[selected.riskLevel]} variant="outline">{selected.riskLevel}</Badge>
+                    <span className="text-sm font-semibold text-[#0f172a]">{selected.score}점</span>
+                  </div>
+                </div>
+                <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-3 py-3">
+                  <div className="text-[11px] font-medium text-[#7b8da1]">탐지시간</div>
+                  <div className="mt-1 text-sm font-semibold text-[#0f172a]">{selected.detectedAt}</div>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-[14px] border border-[#dbe4ee] bg-white px-4 py-4">
+              <div className="mb-3">
+                <div className="text-[13px] font-semibold text-[#0f172a]">탐지 내용</div>
+              </div>
+              <div className="rounded-[12px] border border-[#e5edf5] bg-[#f8fbff] px-4 py-4 leading-6 text-[#334155]">
+                {selected.description}
+              </div>
+            </section>
           </div>
         )}
       </ModalPopup>

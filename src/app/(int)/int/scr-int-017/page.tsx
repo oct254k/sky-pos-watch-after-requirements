@@ -7,8 +7,11 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
 import { products, Product } from "@/data/mock";
+import { toast } from "sonner";
+import { useConfirm } from "@/components/common/ConfirmProvider";
 
 export default function ScrInt017() {
+  const confirm = useConfirm();
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState(products);
 
@@ -18,16 +21,24 @@ export default function ScrInt017() {
 
   const handleApprove = () => {
     const pending = data.filter((p) => p.status === "미승인");
-    if (pending.length === 0) { alert("미승인 품목이 없습니다."); return; }
+    if (pending.length === 0) { toast.warning("미승인 품목이 없습니다."); return; }
     setData((prev) => prev.map((p) => p.status === "미승인" ? { ...p, status: "승인" } : p));
-    alert(`${pending.length}건 승인 처리되었습니다. (Mock)`);
+    toast.success(`${pending.length}건 승인 처리되었습니다.`);
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     const pending = data.filter((p) => p.status === "미승인");
-    if (pending.length === 0) { alert("미승인 품목이 없습니다."); return; }
+    if (pending.length === 0) { toast.warning("미승인 품목이 없습니다."); return; }
+    const confirmed = await confirm({
+      title: "일괄 반려",
+      message: `${pending.length}건을 반려하시겠습니까?`,
+      confirmLabel: "반려",
+      cancelLabel: "취소",
+      tone: "danger",
+    });
+    if (!confirmed) return;
     setData((prev) => prev.map((p) => p.status === "미승인" ? { ...p, status: "반려" } : p));
-    alert(`${pending.length}건 반려 처리되었습니다. (Mock)`);
+    toast.success(`${pending.length}건 반려 처리되었습니다.`);
   };
 
   const columns: Column<Product>[] = [

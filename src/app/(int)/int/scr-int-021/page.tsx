@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
 import { dailyCloses, DailyClose } from "@/data/mock";
+import { toast } from "sonner";
 
 export default function ScrInt021() {
   const [date, setDate] = useState("");
@@ -23,9 +24,9 @@ export default function ScrInt021() {
 
   const handleConfirm = () => {
     const pending = data.filter((d) => d.status === "미확정");
-    if (pending.length === 0) { alert("미확정 건이 없습니다."); return; }
+    if (pending.length === 0) { toast.warning("미확정 건이 없습니다."); return; }
     setData((prev) => prev.map((d) => d.status === "미확정" ? { ...d, status: "확정", confirmedBy: "관리자", confirmedAt: new Date().toLocaleString("ko") } : d));
-    alert(`${pending.length}건 확정 처리되었습니다. (Mock)`);
+    toast.success(`${pending.length}건 확정 처리되었습니다.`);
   };
 
   const columns: Column<DailyClose>[] = [

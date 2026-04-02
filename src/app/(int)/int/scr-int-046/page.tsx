@@ -26,11 +26,25 @@ const columns: Column<Row>[] = [
 
 export default function ScrInt046() {
   const [yearMonth, setYearMonth] = useState("2025-01");
+  const [chartRows, setChartRows] = useState(chartData);
+  const [data, setData] = useState(tableData);
+
+  const handleSearch = () => {
+    const inRange = yearMonth === "2025-01";
+    setChartRows(inRange ? chartData : []);
+    setData(inRange ? tableData : []);
+  };
+
+  const handleReset = () => {
+    setYearMonth("2025-01");
+    setChartRows(chartData);
+    setData(tableData);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">사용자 구성 매출분석</h2>
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">기준년월</label>
           <Input type="month" value={yearMonth} onChange={(e) => setYearMonth(e.target.value)} className="w-40" />
@@ -38,7 +52,7 @@ export default function ScrInt046() {
       </SearchPanel>
       <ChartCard title="주요 매출지표 비교 (단위: 만원)">
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData}>
+          <BarChart data={chartRows}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="metric" />
             <YAxis />
@@ -49,7 +63,7 @@ export default function ScrInt046() {
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-      <DataGrid columns={columns} data={tableData as unknown as Record<string, unknown>[]} />
+      <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} />
     </div>
   );
 }

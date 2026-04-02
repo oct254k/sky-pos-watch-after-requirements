@@ -24,7 +24,7 @@ const mockData: RequestItem[] = [
 ];
 
 export default function ScrExt023() {
-  const [data] = useState<RequestItem[]>(mockData);
+  const [data, setData] = useState<RequestItem[]>(mockData);
   const [searchType, setSearchType] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
 
@@ -38,11 +38,27 @@ export default function ScrExt023() {
     { key: "processDate", label: "처리일", width: "110px" },
   ];
 
+  const handleSearch = () => {
+    setData(
+      mockData.filter((row) => {
+        const matchType = !searchType || row.type.includes(searchType);
+        const matchStatus = !searchStatus || row.status.includes(searchStatus);
+        return matchType && matchStatus;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearchType("");
+    setSearchStatus("");
+    setData(mockData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">신청 내역 조회</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">유형</label>
           <Input value={searchType} onChange={(e) => setSearchType(e.target.value)} placeholder="품목등록/가격변경" className="w-40" />

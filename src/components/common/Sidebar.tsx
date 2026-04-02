@@ -18,7 +18,7 @@ function MenuNode({ item, depth = 0 }: { item: MenuItem; depth?: number }) {
       <Link
         href={item.path}
         className={cn(
-          "block rounded-md px-3 py-1.5 text-[13px] transition-colors",
+          "block rounded-md px-3 py-2 text-[13px] transition-colors",
           isActive
             ? "bg-[#0ea5e9]/20 text-[#7dd3fc] font-medium border-l-2 border-[#0ea5e9] ml-0"
             : "text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#002D56]/60",
@@ -35,7 +35,7 @@ function MenuNode({ item, depth = 0 }: { item: MenuItem; depth?: number }) {
     <div className={cn(depth > 0 && "ml-2")}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-1.5 rounded-md px-3 py-2 text-[13px] font-medium text-[#cbd5e1] hover:bg-[#002D56]/60 hover:text-white transition-colors"
+        className="flex w-full items-center gap-1.5 rounded-md px-3 py-2.5 text-[13px] font-medium text-[#cbd5e1] transition-colors hover:bg-[#002D56]/60 hover:text-white"
       >
         {item.icon && <span className="text-sm opacity-70">{item.icon}</span>}
         <span className="flex-1 text-left">{item.label}</span>
@@ -63,7 +63,7 @@ export function Sidebar({ area }: { area: AreaType }) {
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-3 border-b border-[#1e3a5f]">
+      <div className="border-b border-[#1e3a5f] p-3">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
           Navigation
         </p>

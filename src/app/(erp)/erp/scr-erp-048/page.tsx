@@ -6,6 +6,7 @@ import { SearchPanel } from "@/components/common/SearchPanel";
 import { DataGrid, Column } from "@/components/common/DataGrid";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type Row = Record<string, unknown>;
 
@@ -28,12 +29,43 @@ const mockData: Row[] = [
 
 export default function ScrErp048() {
   const [search, setSearch] = useState({ exceptionType: "", occurDate: "", status: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<Row[]>(mockData);
+
+  const applySearch = () => {
+    const filtered = mockData.filter((row) => {
+      const matchesExceptionType =
+        !search.exceptionType || String(row.exceptionType ?? "").toLowerCase().includes(search.exceptionType.toLowerCase());
+      const matchesOccurDate =
+        !search.occurDate || String(row.occurDate ?? "").toLowerCase().includes(search.occurDate.toLowerCase());
+      const matchesStatus =
+        !search.status || String(row.status ?? "").toLowerCase().includes(search.status.toLowerCase());
+
+      return matchesExceptionType && matchesOccurDate && matchesStatus;
+    });
+
+    setData(filtered);
+  };
+
+  const handleSearch = () => {
+    setIsLoading(true);
+    window.setTimeout(() => {
+      applySearch();
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const handleReset = () => {
+    setSearch({ exceptionType: "", occurDate: "", status: "" });
+    setData(mockData);
+    setIsLoading(false);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">SCR-ERP-048 예외 처리 관리 현황 조회</h2>
       <MockBanner message="임대ERP 연계 데이터 - 읽기 전용" />
-      <SearchPanel onSearch={() => {}} onReset={() => setSearch({ exceptionType: "", occurDate: "", status: "" })}>
+      <SearchPanel {...({ loading: isLoading } as Record<string, unknown>)} onSearch={handleSearch} onReset={handleReset}>
         
         <div className="flex flex-col gap-1">
           <label className="text-xs text-muted-foreground">예외유형</label>
@@ -63,9 +95,9 @@ export default function ScrErp048() {
           />
         </div>
       </SearchPanel>
-      <DataGrid columns={columns} data={mockData} />
+      <DataGrid {...({ loading: isLoading, loadingMessage: "데이터를 불러오는 중입니다" } as Record<string, unknown>)} columns={columns} data={data} />
       <ActionBar>
-        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => alert("엑셀 다운로드")} />
+        <ActionButton label="엑셀 다운로드" variant="outline" onClick={() => toast.info("엑셀 다운로드를 시작합니다.")} />
       </ActionBar>
     </div>
   );

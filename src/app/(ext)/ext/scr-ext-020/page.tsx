@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { notices, Notice } from "@/data/mock";
 
 export default function ScrExt020() {
-  const [data] = useState<Notice[]>(notices.slice(0, 3));
+  const initialData = notices.slice(0, 3);
+  const [data, setData] = useState<Notice[]>(initialData);
   const [searchTitle, setSearchTitle] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
 
@@ -21,11 +22,27 @@ export default function ScrExt020() {
     { key: "viewCount", label: "조회수", width: "70px" },
   ];
 
+  const handleSearch = () => {
+    setData(
+      initialData.filter((row) => {
+        const matchTitle = !searchTitle || row.title.includes(searchTitle);
+        const matchCategory = !searchCategory || row.category.includes(searchCategory);
+        return matchTitle && matchCategory;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    setSearchTitle("");
+    setSearchCategory("");
+    setData(initialData);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">공지사항</h2>
       <MockBanner message="이 화면은 Mock 데이터로 구성된 읽기전용 화면입니다." />
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">제목</label>
           <Input value={searchTitle} onChange={(e) => setSearchTitle(e.target.value)} placeholder="제목 검색" className="w-48" />

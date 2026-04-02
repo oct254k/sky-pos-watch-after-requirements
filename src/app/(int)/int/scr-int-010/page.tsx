@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ActionBar, ActionButton } from "@/components/common/ActionBar";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
+import { useConfirm } from "@/components/common/ConfirmProvider";
 
 interface TreeNode { id: string; label: string; children?: TreeNode[]; }
 
@@ -66,12 +68,30 @@ function TreeItem({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
 }
 
 export default function ScrInt010() {
+  const confirm = useConfirm();
+
+  const handleAdd = () => {
+    toast.success("분류 추가 화면을 준비했습니다.");
+  };
+
+  const handleDelete = async () => {
+    const confirmed = await confirm({
+      title: "분류 삭제",
+      message: "선택한 분류를 삭제하시겠습니까?",
+      confirmLabel: "삭제",
+      cancelLabel: "취소",
+      tone: "danger",
+    });
+    if (!confirmed) return;
+    toast.success("분류가 삭제되었습니다.");
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">품목분류 관리</h2>
       <ActionBar>
-        <ActionButton label="분류 추가" onClick={() => alert("추가 (Mock)")} />
-        <ActionButton label="분류 삭제" variant="destructive" onClick={() => alert("삭제 (Mock)")} />
+        <ActionButton label="신규 등록" onClick={handleAdd} />
+        <ActionButton label="삭제" variant="destructive" onClick={handleDelete} />
       </ActionBar>
       <Card>
         <CardContent className="pt-4">

@@ -32,11 +32,26 @@ const columns: Column<Row>[] = [
 
 export default function ScrInt047() {
   const [date, setDate] = useState("");
+  const [chartRows, setChartRows] = useState(chartData);
+  const [data, setData] = useState(tableData);
+
+  const handleSearch = () => {
+    const filteredChart = !date ? chartData : chartData.filter((row) => `2025-${row.date.replace("/", "-")}` === date);
+    const filteredTable = !date ? tableData : tableData.filter((row) => row.date === date);
+    setChartRows(filteredChart);
+    setData(filteredTable);
+  };
+
+  const handleReset = () => {
+    setDate("");
+    setChartRows(chartData);
+    setData(tableData);
+  };
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">전대매장 매출 일집계</h2>
-      <SearchPanel>
+      <SearchPanel onSearch={handleSearch} onReset={handleReset}>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-muted-foreground">기준일</label>
           <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-40" />
@@ -44,7 +59,7 @@ export default function ScrInt047() {
       </SearchPanel>
       <ChartCard title="전대매장 일별 매출 추이 (단위: 만원)">
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData}>
+          <LineChart data={chartRows}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
@@ -55,7 +70,7 @@ export default function ScrInt047() {
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
-      <DataGrid columns={columns} data={tableData as unknown as Record<string, unknown>[]} />
+      <DataGrid columns={columns} data={data as unknown as Record<string, unknown>[]} />
     </div>
   );
 }
