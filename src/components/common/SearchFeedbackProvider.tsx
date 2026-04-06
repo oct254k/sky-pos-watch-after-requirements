@@ -14,11 +14,11 @@ const SearchFeedbackContext = createContext<SearchFeedbackContextValue | null>(n
 export function SearchFeedbackProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("데이터를 불러오는 중입니다");
-  const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const stopLoading = () => {
     if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current);
       timerRef.current = null;
     }
     setLoading(false);
@@ -26,11 +26,11 @@ export function SearchFeedbackProvider({ children }: { children: ReactNode }) {
 
   const startLoading = (message = "데이터를 불러오는 중입니다", durationMs = 800) => {
     if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current);
     }
     setLoadingMessage(message);
     setLoading(true);
-    timerRef.current = window.setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setLoading(false);
       timerRef.current = null;
     }, durationMs);

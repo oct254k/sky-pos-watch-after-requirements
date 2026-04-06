@@ -25,7 +25,7 @@ export default function ScrExt024() {
   const handleSave = () => {
     if (isSaving) return;
     setIsSaving(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       toast.success("회원정보가 수정되었습니다.");
       setIsSaving(false);
     }, 700);

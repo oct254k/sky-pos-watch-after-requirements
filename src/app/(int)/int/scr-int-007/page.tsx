@@ -56,7 +56,7 @@ export default function ScrInt007() {
 
   const handleSearch = () => {
     setIsLoading(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       applySearch();
       setIsLoading(false);
     }, 800);

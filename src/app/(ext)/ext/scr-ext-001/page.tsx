@@ -55,7 +55,7 @@ export default function ScrExt001() {
     setErrors({});
     setPendingErrors({});
     setIsSubmitting(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       toast.success("회원가입이 완료되었습니다.");
       setForm({ companyName: "", bizNo: "", ceo: "", phone: "", email: "" });
       setIsSubmitting(false);

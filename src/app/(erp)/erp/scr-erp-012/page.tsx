@@ -29,7 +29,7 @@ export default function ScrErp012() {
   const [search, setSearch] = useState({ brandName: "", category: "", useYn: "" });
   const [data, setData] = useState<Row[]>(mockData);
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const applySearch = () => {
     const filtered = mockData.filter((row) =>
@@ -42,9 +42,9 @@ export default function ScrErp012() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -52,7 +52,7 @@ export default function ScrErp012() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setSearch({ brandName: "", category: "", useYn: "" });
     setData(mockData);
     setIsLoading(false);

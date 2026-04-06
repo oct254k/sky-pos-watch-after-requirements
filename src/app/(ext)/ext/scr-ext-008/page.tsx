@@ -42,7 +42,7 @@ export default function ScrExt008() {
       return;
     }
     setIsSaving(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       toast.success(`기타 매출이 등록되었습니다. (${form.storeName} / ${Number(form.amount).toLocaleString()}원)`);
       setForm({ storeName: "", date: new Date().toISOString().slice(0, 10), category: "", amount: "", memo: "" });
       setIsSaving(false);

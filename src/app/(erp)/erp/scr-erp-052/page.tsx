@@ -51,7 +51,7 @@ export default function ScrErp052() {
 
   const handleSearch = () => {
     setIsLoading(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       applySearch();
       setIsLoading(false);
     }, 800);

@@ -35,7 +35,7 @@ export default function ScrErp025() {
   const [search, setSearch] = useState({ contractNo: "", companyName: "", calcMonth: "" });
   const [data, setData] = useState<Row[]>(mockData);
   const [isLoading, setIsLoading] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const applySearch = () => {
     const normalized = {
@@ -55,9 +55,9 @@ export default function ScrErp025() {
   };
 
   const handleSearch = () => {
-    if (timerRef.current) window.clearTimeout(timerRef.current);
+    if (timerRef.current) clearTimeout(timerRef.current);
     setIsLoading(true);
-    timerRef.current = window.setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
     }, 800);
@@ -65,7 +65,7 @@ export default function ScrErp025() {
 
   const handleReset = () => {
     if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current);
       timerRef.current = null;
     }
     setSearch({ contractNo: "", companyName: "", calcMonth: "" });

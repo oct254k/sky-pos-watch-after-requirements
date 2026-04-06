@@ -107,7 +107,7 @@ export default function ScrExt003() {
     }
     setErrors({});
     setIsSaving(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       if (selected) {
         setData((prev) =>
           prev.map((p) =>
@@ -163,7 +163,7 @@ export default function ScrExt003() {
     });
     if (!confirmed) return;
     setIsDeleting(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       setData((prev) => prev.filter((p) => p.id !== selected.id));
       setModalOpen(false);
       toast.success("품목이 삭제되었습니다.");

@@ -31,7 +31,7 @@ export default function ScrErp013() {
   const [search, setSearch] = useState({ classCode: "", className: "", level: "" });
   const [data, setData] = useState<Row[]>(mockData);
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const applySearch = () => {
     const filtered = mockData.filter((row) =>
@@ -44,9 +44,9 @@ export default function ScrErp013() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -54,7 +54,7 @@ export default function ScrErp013() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setSearch({ classCode: "", className: "", level: "" });
     setData(mockData);
     setIsLoading(false);

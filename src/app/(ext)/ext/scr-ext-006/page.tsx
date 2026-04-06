@@ -18,7 +18,7 @@ export default function ScrExt006() {
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<Receipt | null>(null);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const columns: Column<Receipt>[] = [
     { key: "id", label: "영수증번호", width: "110px" },
@@ -40,9 +40,9 @@ export default function ScrExt006() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -50,7 +50,7 @@ export default function ScrExt006() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setStartDate("2025-01-01");
     setEndDate("2025-01-31");
     setStoreName("");

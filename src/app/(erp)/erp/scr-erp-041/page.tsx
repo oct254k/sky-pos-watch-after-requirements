@@ -33,11 +33,11 @@ export default function ScrErp041() {
   const [search, setSearch] = useState(initialSearch);
   const [data, setData] = useState<Row[]>(mockData);
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimerRef = useRef<number | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearSearchTimer = () => {
     if (searchTimerRef.current !== null) {
-      window.clearTimeout(searchTimerRef.current);
+      clearTimeout(searchTimerRef.current);
       searchTimerRef.current = null;
     }
   };
@@ -47,7 +47,7 @@ export default function ScrErp041() {
   const applySearch = () => {
     clearSearchTimer();
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       const filtered = mockData.filter((row) =>
         Object.entries(search).every(([key, value]) => {
           const searchValue = String(value ?? "").trim().toLowerCase();

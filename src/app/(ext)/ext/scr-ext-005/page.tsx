@@ -15,7 +15,7 @@ export default function ScrExt005() {
   const [data, setData] = useState<Product[]>(unapproved);
   const [searchName, setSearchName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const columns: Column<Product>[] = [
     { key: "id", label: "품목코드", width: "100px" },
@@ -35,9 +35,9 @@ export default function ScrExt005() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -45,7 +45,7 @@ export default function ScrExt005() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setSearchName("");
     setData(unapproved);
     setIsLoading(false);

@@ -46,11 +46,11 @@ export default function ScrErp001() {
   const [search, setSearch] = useState({ contractNo: "", companyName: "", contractType: "", status: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Row[]>(mockData);
-  const searchTimerRef = useRef<number | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearSearchTimer = () => {
     if (searchTimerRef.current !== null) {
-      window.clearTimeout(searchTimerRef.current);
+      clearTimeout(searchTimerRef.current);
       searchTimerRef.current = null;
     }
   };
@@ -88,7 +88,7 @@ export default function ScrErp001() {
           clearSearchTimer();
           setIsLoading(true);
           const snapshot = { ...search };
-          searchTimerRef.current = window.setTimeout(() => {
+          searchTimerRef.current = setTimeout(() => {
             applySearch(snapshot);
             setIsLoading(false);
             searchTimerRef.current = null;

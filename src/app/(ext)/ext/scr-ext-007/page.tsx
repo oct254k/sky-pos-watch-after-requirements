@@ -85,7 +85,7 @@ export default function ScrExt007() {
     }
     setErrors({});
     setIsSaving(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       if (selected) {
         setData((prev) => prev.map((d) => d.id === selected.id ? { ...d, storeName: editForm.storeName, date: editForm.date, amount: Number(editForm.amount), memo: editForm.memo } : d));
         toast.success("수동매출이 수정되었습니다.");
@@ -124,7 +124,7 @@ export default function ScrExt007() {
     });
     if (!confirmed) return;
     setIsDeleting(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       setData((prev) => prev.filter((d) => d.id !== selected.id));
       setModalOpen(false);
       toast.success("수동매출이 삭제되었습니다.");

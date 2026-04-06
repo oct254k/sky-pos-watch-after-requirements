@@ -15,7 +15,7 @@ export default function ScrExt004() {
   const [endDate, setEndDate] = useState("2025-12-31");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const columns: Column<Product>[] = [
     { key: "id", label: "품목코드", width: "100px" },
@@ -36,9 +36,9 @@ export default function ScrExt004() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -46,7 +46,7 @@ export default function ScrExt004() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setStartDate("2024-01-01");
     setEndDate("2025-12-31");
     setStatus("");

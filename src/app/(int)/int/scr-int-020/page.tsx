@@ -14,7 +14,7 @@ export default function ScrInt020() {
   const [data, setData] = useState(receipts);
   const [isLoading, setIsLoading] = useState(false);
   const [selected, setSelected] = useState<Receipt | null>(null);
-  const searchTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const applySearch = () => {
     setData(receipts.filter((r) => {
@@ -25,9 +25,9 @@ export default function ScrInt020() {
   };
 
   const handleSearch = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setIsLoading(true);
-    searchTimerRef.current = window.setTimeout(() => {
+    searchTimerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
       searchTimerRef.current = null;
@@ -35,7 +35,7 @@ export default function ScrInt020() {
   };
 
   const handleReset = () => {
-    if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     setKeyword("");
     setDate("");
     setData(receipts);

@@ -35,7 +35,7 @@ export default function ScrErp022() {
   const [search, setSearch] = useState({ promoCode: "", itemName: "", storeName: "" });
   const [data, setData] = useState<Row[]>(mockData);
   const [isLoading, setIsLoading] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const applySearch = () => {
     const normalized = {
@@ -56,10 +56,10 @@ export default function ScrErp022() {
 
   const handleSearch = () => {
     if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current);
     }
     setIsLoading(true);
-    timerRef.current = window.setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       applySearch();
       setIsLoading(false);
     }, 800);
@@ -67,7 +67,7 @@ export default function ScrErp022() {
 
   const handleReset = () => {
     if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current);
       timerRef.current = null;
     }
     setSearch({ promoCode: "", itemName: "", storeName: "" });
