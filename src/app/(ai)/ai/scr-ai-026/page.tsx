@@ -380,7 +380,7 @@ export default function ScrAi026() {
     const typingId = nextId();
     const typingMsg: Msg = {
       id: typingId, role: "typing",
-      content: <div className={styles.typing}><span /><span /><span /></div>,
+      content: <div className={`${styles.bubble} ${styles.bubbleAi}`}><div className={styles.typing}><span /><span /><span /></div></div>,
     };
     setDynamicMsgs((prev) => [...prev, userMsg, typingMsg]);
 
@@ -526,12 +526,11 @@ export default function ScrAi026() {
                 <div className={`${styles.msgAvatar} ${m.role === "user" ? styles.msgAvatarUser : styles.msgAvatarAi}`}>
                   {m.role === "user" ? <User size={12} /> : <Brain size={12} />}
                 </div>
-                <div
-                  className={`${styles.bubble} ${m.role === "user" ? styles.bubbleUser : styles.bubbleAi}`}
-                  style={m.role !== "user" ? { maxWidth: "90%" } : {}}
-                >
-                  {m.content}
-                </div>
+                {m.role === "user" ? (
+                  <div className={`${styles.bubble} ${styles.bubbleUser}`}>{m.content}</div>
+                ) : (
+                  <div style={{ maxWidth: "90%" }}>{m.content}</div>
+                )}
               </div>
             ))}
           </div>
