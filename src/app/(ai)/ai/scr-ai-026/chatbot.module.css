@@ -46,10 +46,32 @@
   /* No min-height:100vh — prevents outer scroll */
 }
 
+/* ── Page title ── */
+.pageTitle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.pageTitleIcon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: #e6f1fb;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  color: #185fa5;
+  margin-top: 1px;
+}
+.pageTitleText {
+  font-size: 15px; font-weight: 600; color: #1a1a18; line-height: 1.3;
+}
+.pageTitleSub {
+  font-size: 11px; color: #5a5a56; margin-top: 3px;
+}
+
 /* ── Chat shell ── */
 .chatRoot {
   display: flex;
-  height: 600px;
+  height: calc(100vh - 220px);
+  min-height: 480px;
   border: 0.5px solid rgba(0,0,0,0.12);
   border-radius: 14px;
   overflow: hidden;

@@ -19,6 +19,7 @@ import {
   FileText,
   TrendingUp,
   Send,
+  Globe,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -394,6 +395,15 @@ export default function ScrAi026() {
 
   return (
     <div className={styles.root}>
+      {/* Page title */}
+      <div className={styles.pageTitle}>
+        <div className={styles.pageTitleIcon}><Globe size={17} /></div>
+        <div>
+          <div className={styles.pageTitleText}>SKY-POS 온톨로지 AI 가격비교 챗봇 어시스턴트</div>
+          <div className={styles.pageTitleSub}>한국공항공사 차세대 SKY-POS 구축 — 임대ERP 신규 품목 등록 지원 시나리오</div>
+        </div>
+      </div>
+
       <div className={styles.chatRoot}>
         {/* ── Sidebar ── */}
         <div className={styles.sidebar}>
