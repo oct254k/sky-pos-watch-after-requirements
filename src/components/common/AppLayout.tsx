@@ -11,11 +11,12 @@ import { ConfirmProvider } from "./ConfirmProvider";
 import { SearchFeedbackProvider } from "./SearchFeedbackProvider";
 import { Toaster } from "sonner";
 
-const areaTabs: { key: AreaType; label: string; icon: string; activeClass: string }[] = [
-  { key: "ext", label: "외부 사용자", icon: "🌐", activeClass: "bg-[#002D56] text-white" },
-  { key: "int", label: "내부 운영", icon: "🏢", activeClass: "bg-[#1a8a5c] text-white" },
-  { key: "ai", label: "AI 운영", icon: "🤖", activeClass: "bg-[#6b3fa0] text-white" },
-  { key: "erp", label: "ERP 업무", icon: "📊", activeClass: "bg-[#d4760a] text-white" },
+const areaTabs: { key: AreaType; label: string; icon: string }[] = [
+  { key: "ext", label: "외부 사용자", icon: "🌐" },
+  { key: "int", label: "내부 운영", icon: "🏢" },
+  { key: "ai", label: "AI 운영", icon: "🤖" },
+  { key: "erp", label: "ERP 업무", icon: "📊" },
+  { key: "kac", label: "ERP ASIS 업무", icon: "🏛️" },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
@@ -49,6 +50,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       int: "/int/scr-int-001",
       ai: "/ai/scr-ai-001",
       erp: "/erp/scr-erp-001",
+      kac: "/kac/scr-kac-001",
     };
     router.push(firstPaths[newArea]);
   };
@@ -57,6 +59,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     : pathname.startsWith("/int") ? "int"
     : pathname.startsWith("/ai") ? "ai"
     : pathname.startsWith("/erp") ? "erp"
+    : pathname.startsWith("/kac") ? "kac"
     : area;
 
   if (detectedArea !== area) {
@@ -66,158 +69,143 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <ConfirmProvider>
       <SearchFeedbackProvider>
-      <div className="flex min-h-screen flex-col bg-[#edf1f7]">
-        <header className="border-b border-[#e2e8f0] bg-white shadow-sm">
-          <div className="relative">
-            <div className="flex min-h-14 items-center gap-2 px-3 sm:px-4">
-              <button
-                onClick={toggleSidebar}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#002D56] transition-colors hover:bg-[#f0f4f8]"
-                aria-label="사이드바 열기"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 12h18M3 6h18M3 18h18" />
-                </svg>
-              </button>
+      <div className="flex min-h-screen flex-col bg-[#f3f4f6]">
 
-              <div className="mr-2 flex shrink-0 items-center gap-2 sm:mr-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#002D56] text-white text-xs font-bold">
-                  SP
-                </div>
-                <span className="text-sm font-bold tracking-tight text-[#002D56] sm:text-base">SKY-POS</span>
+        {/* Top Header */}
+        <header className="border-b border-[#d3d6dc] bg-white" style={{ height: 54 }}>
+          <div className="flex h-[54px] items-center gap-0 px-0">
+            {/* Brand mark */}
+            <div className="flex h-[54px] w-[236px] flex-shrink-0 items-center gap-2.5 border-r border-[#d3d6dc] bg-white px-5">
+              <div className="flex h-[26px] w-[26px] items-center justify-center rounded-[5px] border-[1.5px] border-[#191c21] text-[11px] font-extrabold text-[#191c21]">
+                S
               </div>
+              <span className="text-[14px] font-bold tracking-tight text-[#191c21]">SKY-POS</span>
+              <span className="ml-2 border-l border-[#d3d6dc] pl-2.5 text-[11px] font-semibold text-[#838995]">ERP</span>
+            </div>
 
-              {isMobile ? (
-                <div className="min-w-0 flex-1">
-                  <div className="relative inline-block w-[210px] max-w-full align-top">
-                    <button
-                      type="button"
-                      onClick={() => setAreaMenuOpen((open) => !open)}
-                      className="flex h-10 w-full items-center gap-2 rounded-2xl border border-[#d7e2ee] bg-white px-3.5 text-left text-sm font-semibold text-[#0f172a] shadow-[0_6px_16px_rgba(15,23,42,0.08)]"
-                      aria-expanded={areaMenuOpen}
-                      aria-label="사용자 환경 선택"
-                    >
-                      <span className="flex min-w-0 flex-1 items-center gap-2">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#eef4fb] text-xs">
-                          {areaTabs.find((tab) => tab.key === detectedArea)?.icon}
-                        </span>
-                        <span className="truncate text-[13px]">
-                          {areaTabs.find((tab) => tab.key === detectedArea)?.label ?? areaLabels[detectedArea]}
-                        </span>
-                      </span>
-                    </button>
+            {/* Hamburger */}
+            <button
+              onClick={toggleSidebar}
+              className="flex h-[54px] w-10 items-center justify-center border-r border-[#d3d6dc] text-[#474c55] hover:bg-[#f7f8fa]"
+              aria-label="사이드바 열기"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+              </svg>
+            </button>
 
-                    {areaMenuOpen && (
-                      <div className="absolute left-0 top-[calc(100%-2px)] z-40 w-full rounded-b-2xl rounded-t-md border border-[#d7e2ee] border-t-0 bg-white p-1 shadow-[0_18px_40px_rgba(15,23,42,0.16)]">
-                        <div className="grid gap-1">
-                          {areaTabs.map((tab) => (
-                            <button
-                              key={tab.key}
-                              type="button"
-                              onClick={() => handleAreaChange(tab.key)}
-                              className={cn(
-                                "flex min-h-8 items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-medium transition-colors",
-                                detectedArea === tab.key
-                                  ? "bg-[#eef4fb] text-[#002D56]"
-                                  : "bg-white text-[#475569] hover:bg-[#f8fafc]"
-                              )}
-                            >
-                              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f8fafc] text-sm">
-                                {tab.icon}
-                              </span>
-                              <span className="flex-1 text-left">{tab.label}</span>
-                              {detectedArea === tab.key && (
-                                <span className="h-2.5 w-2.5 rounded-full bg-[#1f6fb2]" />
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+            {/* Area tabs (desktop) */}
+            {!isMobile && (
+              <div className="flex h-[54px] items-end gap-0 px-3">
+                {areaTabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => handleAreaChange(tab.key)}
+                    className={cn(
+                      "flex h-full items-center gap-1.5 border-b-2 px-4 text-[12.5px] font-semibold transition-colors whitespace-nowrap",
+                      detectedArea === tab.key
+                        ? "border-[#191c21] text-[#191c21]"
+                        : "border-transparent text-[#838995] hover:text-[#474c55] hover:border-[#d3d6dc]"
                     )}
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="min-w-0 flex-1 overflow-x-auto">
-                    <div className="flex w-max gap-1 rounded-lg bg-[#f0f4f8] p-1">
+                  >
+                    <span className="text-xs">{tab.icon}</span>
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Mobile area picker */}
+            {isMobile && (
+              <div className="min-w-0 flex-1 px-3">
+                <div className="relative inline-block w-[200px] max-w-full">
+                  <button
+                    type="button"
+                    onClick={() => setAreaMenuOpen((o) => !o)}
+                    className="flex h-8 w-full items-center gap-2 rounded border border-[#d3d6dc] bg-white px-3 text-left text-[13px] text-[#191c21]"
+                  >
+                    <span>{areaTabs.find((t) => t.key === detectedArea)?.icon}</span>
+                    <span className="flex-1 truncate">{areaTabs.find((t) => t.key === detectedArea)?.label ?? areaLabels[detectedArea]}</span>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor">
+                      <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                    </svg>
+                  </button>
+                  {areaMenuOpen && (
+                    <div className="absolute left-0 top-full z-40 w-full border border-[#d3d6dc] bg-white shadow-md">
                       {areaTabs.map((tab) => (
                         <button
                           key={tab.key}
+                          type="button"
                           onClick={() => handleAreaChange(tab.key)}
                           className={cn(
-                            "flex min-w-fit items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3.5 sm:text-sm",
-                            detectedArea === tab.key
-                              ? tab.activeClass + " shadow-sm"
-                              : "text-[#64748b] hover:text-[#002D56] hover:bg-white"
+                            "flex w-full items-center gap-2 px-3 py-2 text-[13px] hover:bg-[#f7f8fa]",
+                            detectedArea === tab.key ? "text-[#191c21] font-semibold bg-[#edeff2]" : "text-[#474c55]"
                           )}
                         >
-                          <span className="text-xs">{tab.icon}</span>
-                          {tab.label}
+                          <span>{tab.icon}</span>
+                          <span>{tab.label}</span>
                         </button>
                       ))}
                     </div>
-                  </div>
-
-                  <div className="ml-2 hidden shrink-0 items-center gap-3 sm:flex">
-                    <span className="text-xs font-medium text-[#94a3b8]">
-                      {areaTabs.find((tab) => tab.key === detectedArea)?.label ?? areaLabels[detectedArea]}
-                    </span>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#002D56] text-xs font-medium text-white">
-                      관
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {isMobile && areaMenuOpen && (
-              <>
-                <button
-                  type="button"
-                  aria-label="사용자 환경 선택 닫기"
-                  className="fixed inset-0 z-30 bg-transparent"
-                  onClick={() => setAreaMenuOpen(false)}
-                />
-              </>
+                  )}
+                </div>
+              </div>
             )}
+
+            {/* Right: user info */}
+            <div className="ml-auto flex items-center gap-3.5 pr-5">
+              <span className="text-[12px] text-[#474c55]">
+                {areaTabs.find((t) => t.key === detectedArea)?.label ?? areaLabels[detectedArea]}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#edeff2] border border-[#d3d6dc] text-[10px] font-bold text-[#474c55]">
+                  관
+                </div>
+                <span className="hidden text-[12px] text-[#474c55] sm:block">관리자</span>
+                <span className="text-[10px] font-bold text-white bg-[#474c55] rounded-[3px] px-1.5 py-px">ADMIN</span>
+              </div>
+            </div>
           </div>
         </header>
 
+        {/* Body */}
         <div className="relative flex flex-1 overflow-hidden">
           {isMobile && sidebarOpen && (
             <button
               type="button"
               aria-label="사이드바 닫기"
-              className="absolute inset-0 z-20 bg-[#0f172a]/36"
+              className="absolute inset-0 z-20 bg-black/30"
               onClick={() => setSidebarOpen(false)}
             />
           )}
+
           {sidebarOpen && (
             <aside
               className={cn(
-                "overflow-hidden bg-[#001a33]",
+                "overflow-hidden border-r border-[#363c44]",
                 isMobile
-                  ? "absolute inset-y-0 left-0 z-30 w-[280px] max-w-[82vw] border-r border-[#1e3a5f] shadow-[0_18px_40px_rgba(15,23,42,0.28)]"
-                  : "w-60 flex-shrink-0"
+                  ? "absolute inset-y-0 left-0 z-30 w-[240px] max-w-[85vw] shadow-lg"
+                  : "w-[236px] flex-shrink-0"
               )}
             >
               <Sidebar area={detectedArea} />
             </aside>
           )}
 
-          <main className="flex-1 overflow-auto bg-[#edf1f7] p-3 sm:p-4 lg:p-5">
-            <div className="min-h-full rounded-xl border border-[#e2e8f0] bg-white p-3 shadow-sm sm:p-4 lg:p-5">
+          <main className="flex-1 overflow-auto bg-[#f3f4f6] p-[22px_30px_60px]">
+            <div className="min-h-full border border-[#e4e6ea] bg-white p-4" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
               {children}
             </div>
           </main>
         </div>
+
         <GlobalAlertBridge />
         <Toaster
           position="top-right"
           expand={false}
           richColors
           toastOptions={{
-            className: "!border-[#cdd8e4] !bg-white !text-[#0f172a] !shadow-[0_18px_40px_rgba(15,23,42,0.12)]",
+            className: "!border-[#e4e6ea] !bg-white !text-[#191c21] !shadow-md",
           }}
         />
       </div>

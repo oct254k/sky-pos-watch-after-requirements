@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Building2, Cpu, Globe, LayoutGrid, Sparkles } from "lucide-react";
-import { AreaType, MenuItem, aiMenu, areaLabels, erpMenu, extMenu, intMenu } from "@/data/menu";
+import { ArrowRight, Building2, Cpu, FileText, Globe, LayoutGrid, Sparkles } from "lucide-react";
+import { AreaType, MenuItem, aiMenu, areaLabels, erpMenu, extMenu, intMenu, kacMenu } from "@/data/menu";
 
 type PortalHubProps =
   | {
@@ -51,6 +51,13 @@ const areaMeta: Record<
     color: "from-[#a45704] to-[#d97706]",
     entry: "/erp",
   },
+  kac: {
+    icon: FileText,
+    title: "ERP ASIS 업무 포털",
+    description: "KAC 임대계약관리, 계약처리, 임대료, 임대현황 조회, 고객관리, 임대보증금 업무 화면 포털입니다.",
+    color: "from-[#1a4d7a] to-[#2d7ab8]",
+    entry: "/kac",
+  },
 };
 
 const areaMenus: Record<AreaType, MenuItem[]> = {
@@ -58,6 +65,7 @@ const areaMenus: Record<AreaType, MenuItem[]> = {
   int: intMenu,
   ai: aiMenu,
   erp: erpMenu,
+  kac: kacMenu,
 };
 
 function topGroups(items: MenuItem[]) {
