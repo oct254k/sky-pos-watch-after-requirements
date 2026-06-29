@@ -264,7 +264,8 @@ export const aiMenu: MenuItem[] = [
   {
     id: "ai-8", label: "의사결정 지원", area: "ai", icon: "💡", children: [
       { id: "SCR-AI-025", label: "자동 인사이트 생성", path: "/ai/scr-ai-025", area: "ai" },
-      { id: "SCR-AI-026", label: "자연어 질의 데이터 조회", path: "/ai/scr-ai-026", area: "ai" },
+      { id: "SCR-AI-026", label: "온톨로지 AI 챗봇 (React)", path: "/ai/scr-ai-026", area: "ai" },
+      { id: "SCR-AI-026-V2", label: "온톨로지 AI 챗봇 (iframe)", path: "/ai/scr-ai-026-v2", area: "ai" },
       { id: "SCR-AI-027", label: "KPI 대시보드", path: "/ai/scr-ai-027", area: "ai" },
       { id: "SCR-AI-028", label: "실시간 이상 알림", path: "/ai/scr-ai-028", area: "ai" },
     ],
