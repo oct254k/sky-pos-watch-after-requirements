@@ -1,0 +1,320 @@
+/* ── Scoped chatbot styles — all selectors live under .root ── */
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* CSS variables scoped to .root */
+.root {
+  --surface-0: #f4f3ef;
+  --surface-1: #f0efeb;
+  --surface-2: #ffffff;
+  --surface-3: #ffffff;
+  --text-primary: #1a1a18;
+  --text-secondary: #5a5a56;
+  --text-muted: #9a9994;
+  --border: rgba(0,0,0,0.1);
+  --border-strong: rgba(0,0,0,0.18);
+  --radius: 8px;
+  --bg-accent: #e6f1fb;
+  --border-accent: #85b7eb;
+  --text-accent: #185fa5;
+  --fill-accent: #378add;
+  --fill-accent-hover: #185fa5;
+  --on-accent: #ffffff;
+  --bg-success: #eaf3de;
+  --border-success: #97c459;
+  --text-success: #3b6d11;
+  --fill-success: #639922;
+  --on-success: #ffffff;
+  --bg-warning: #faeeda;
+  --border-warning: #ef9f27;
+  --text-warning: #854f0b;
+  --bg-danger: #fcebeb;
+  --border-danger: #f09595;
+  --text-danger: #a32d2d;
+  --fill-danger: #e24b4a;
+  --bg-pro: #eeedfe;
+  --border-pro: #afa9ec;
+  --text-pro: #3c3489;
+
+  font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  /* No min-height:100vh — prevents outer scroll */
+}
+
+/* ── Chat shell ── */
+.chatRoot {
+  display: flex;
+  height: 600px;
+  border: 0.5px solid rgba(0,0,0,0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 210px;
+  min-width: 210px;
+  background: #f7f6f2;
+  border-right: 0.5px solid rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+.sidebarHeader {
+  padding: 14px 14px 10px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.1);
+}
+.sidebarLabel { font-size: 10px; font-weight: 500; color: #9a9994; letter-spacing: .06em; text-transform: uppercase; }
+.sidebarBrand { font-size: 14px; font-weight: 500; color: #1a1a18; margin-top: 3px; }
+.ontoTree { flex: 1; overflow-y: auto; padding: 6px 0; }
+.ontoSection {
+  padding: 10px 14px 4px;
+  font-size: 10px; font-weight: 500; color: #9a9994;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.ontoNode {
+  padding: 7px 14px;
+  font-size: 12px; color: #5a5a56;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  border-left: 2px solid transparent;
+  transition: background .12s;
+}
+.ontoNode:hover { background: rgba(0,0,0,0.04); }
+.ontoNodeActive {
+  border-left-color: #378add;
+  color: #185fa5;
+  background: #e6f1fb;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* Topbar */
+.chatTopbar {
+  padding: 10px 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  background: #ffffff;
+  display: flex; align-items: center; gap: 10px;
+}
+.aiAvatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #e6f1fb;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  color: #185fa5;
+}
+.topbarInfo { flex: 1; }
+.topbarName { font-size: 13px; font-weight: 500; color: #1a1a18; }
+.topbarStatus { font-size: 11px; color: #3b6d11; }
+.ontoBadge {
+  font-size: 10px; padding: 2px 9px; border-radius: 99px;
+  background: #eeedfe; color: #3c3489; border: 0.5px solid #afa9ec;
+}
+
+/* Messages */
+.chatMessages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.msg { display: flex; gap: 8px; align-items: flex-start; }
+.msgUser { flex-direction: row-reverse; }
+.msgAvatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 11px; font-weight: 500;
+}
+.msgAvatarAi { background: #e6f1fb; color: #185fa5; }
+.msgAvatarUser { background: #f0efeb; border: 0.5px solid rgba(0,0,0,0.1); color: #5a5a56; }
+.bubble {
+  max-width: 84%; padding: 10px 13px;
+  font-size: 13px; line-height: 1.65; border-radius: 12px;
+}
+.bubbleAi {
+  background: #f7f6f2;
+  border: 0.5px solid rgba(0,0,0,0.1);
+  color: #1a1a18;
+  border-radius: 2px 12px 12px 12px;
+}
+.bubbleUser {
+  background: #378add;
+  color: #ffffff;
+  border-radius: 12px 2px 12px 12px;
+}
+
+/* Info cards */
+.infoCard {
+  margin-top: 8px;
+  border: 0.5px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+.infoCardHeader {
+  padding: 7px 12px;
+  background: #f7f6f2;
+  border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  font-size: 11px; font-weight: 500; color: #5a5a56;
+  display: flex; align-items: center; gap: 6px;
+}
+.infoCardBody { padding: 10px 12px; }
+.kvRow {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 4px 0; border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  font-size: 12px;
+}
+.kvRow:last-child { border-bottom: none; }
+.kvKey { color: #9a9994; }
+.kvVal { font-weight: 500; color: #1a1a18; }
+.kvValAccent { color: #185fa5; }
+.kvValSuccess { color: #3b6d11; }
+.kvValWarning { color: #854f0b; }
+.kvValDanger { color: #a32d2d; }
+
+/* Tags */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; padding: 2px 7px; border-radius: 99px; margin: 2px;
+}
+.tagBlue { background: #e6f1fb; color: #185fa5; }
+.tagGreen { background: #eaf3de; color: #3b6d11; }
+.tagAmber { background: #faeeda; color: #854f0b; }
+.tagRed { background: #fcebeb; color: #a32d2d; }
+.tagPurple { background: #eeedfe; color: #3c3489; }
+
+/* Bar chart */
+.barRow { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 11px; }
+.barLabel { width: 110px; text-align: right; color: #5a5a56; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barTrack { flex: 1; height: 10px; background: #f0efeb; border-radius: 99px; overflow: hidden; border: 0.5px solid rgba(0,0,0,0.08); }
+.barFill { height: 100%; border-radius: 99px; }
+.barVal { width: 65px; font-weight: 500; color: #1a1a18; font-size: 11px; }
+
+/* Fee / warn boxes */
+.feeBox {
+  background: #eaf3de; border: 0.5px solid #97c459;
+  border-radius: 8px; padding: 10px 14px; margin-top: 8px;
+}
+.feeMain { font-size: 18px; font-weight: 500; color: #3b6d11; }
+.feeSub { font-size: 11px; color: #3b6d11; margin-top: 2px; }
+.warnBox {
+  background: #faeeda; border: 0.5px solid #ef9f27;
+  border-radius: 8px; padding: 8px 12px; margin-top: 8px;
+  font-size: 12px; color: #854f0b;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+
+/* Step list */
+.stepList { margin-top: 6px; }
+.stepItem { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 12px; color: #1a1a18; }
+.stepNum {
+  width: 18px; height: 18px; border-radius: 50%;
+  font-size: 10px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+
+/* Inline ref */
+.inlineRef { font-size: 10px; color: #9a9994; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+/* Divider */
+.dividerLabel { text-align: center; font-size: 10px; color: #9a9994; padding: 4px 0; }
+
+/* Suggest chips */
+.suggestChips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px;
+  border-top: 0.5px solid rgba(0,0,0,0.1);
+  background: #ffffff;
+}
+.chip {
+  font-size: 11px; padding: 5px 12px; border-radius: 99px;
+  border: 0.5px solid rgba(0,0,0,0.18);
+  color: #5a5a56; cursor: pointer; background: #ffffff;
+  transition: background .12s;
+  white-space: nowrap;
+}
+.chip:hover { background: #f0efeb; color: #1a1a18; border-color: #85b7eb; }
+
+/* Input row */
+.inputRow {
+  padding: 10px 14px;
+  border-top: 0.5px solid rgba(0,0,0,0.1);
+  background: #ffffff;
+  display: flex; gap: 8px; align-items: center;
+}
+.chatInput {
+  flex: 1; height: 36px; padding: 0 12px;
+  border: 0.5px solid rgba(0,0,0,0.18);
+  border-radius: 8px; font-size: 13px;
+  background: #f7f6f2; color: #1a1a18; outline: none;
+  font-family: inherit;
+}
+.chatInput:focus { border-color: #85b7eb; background: #ffffff; }
+.sendBtn {
+  height: 36px; padding: 0 14px;
+  background: #378add; color: #ffffff;
+  border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-family: inherit;
+}
+.sendBtn:hover { background: #185fa5; }
+
+/* Action buttons */
+.approveRow { display: flex; gap: 8px; margin-top: 10px; }
+.btnApprove {
+  flex: 1; height: 32px;
+  background: #639922; color: #ffffff;
+  border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.btnApprove:hover { background: #3b6d11; }
+.btnReject {
+  flex: 1; height: 32px;
+  background: #ffffff; color: #a32d2d;
+  border: 0.5px solid #f09595; border-radius: 8px;
+  font-size: 12px; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.btnReject:hover { background: #fcebeb; }
+.btnAsk {
+  flex: 1; height: 32px;
+  background: #ffffff; color: #185fa5;
+  border: 0.5px solid #85b7eb; border-radius: 8px;
+  font-size: 12px; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.btnAsk:hover { background: #e6f1fb; }
+
+/* Approved banner */
+.approvedBanner {
+  background: #eaf3de; border: 0.5px solid #97c459;
+  border-radius: 8px; padding: 10px 14px; margin-top: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.approvedTitle { font-size: 13px; font-weight: 500; color: #3b6d11; }
+.approvedSub { font-size: 11px; color: #3b6d11; }
+
+/* Typing indicator */
+.typing { display: flex; align-items: center; gap: 4px; padding: 6px 0 2px; }
+.typing span {
+  width: 5px; height: 5px; border-radius: 50%; background: #9a9994;
+  animation: blink 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+
+/* Utility */
+.aiOpinionBox {
+  margin-top: 10px; font-size: 12px; color: #5a5a56; line-height: 1.7;
+  background: #f7f6f2; border-radius: 8px; padding: 10px 12px;
+  border: 0.5px solid rgba(0,0,0,0.1);
+}
+.tagRow { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
