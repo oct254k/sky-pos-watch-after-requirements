@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import styles from "./floorPlan.module.css";
 import {
   UNITS, STATUS, FLOORS,
-  type Unit, type UnitStatus,
+  type Unit,
   fmtSales, dday,
 } from "./data";
 
