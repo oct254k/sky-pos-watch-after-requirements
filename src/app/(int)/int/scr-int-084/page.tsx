@@ -457,19 +457,54 @@ export default function ScrInt084() {
                   strokeWidth={calibMode ? 2 : 1.5}
                   fillOpacity={calibMode ? 0 : undefined}
                 />
-                <text
-                  className={styles.unitLabel}
-                  x={u.x + u.w / 2}
-                  y={u.y + u.h / 2 + 5}
-                  fill={calibMode ? "#ef4444" : (u.status === "vacant" ? "#3a444d" : "#13351f")}
-                  fontSize={calibMode ? 12 : undefined}
-                >
-                  {calibMode ? u.id : (
-                    u.tenant
-                      ? u.tenant.length > 5 ? u.tenant.slice(0, 4) + "…" : u.tenant
-                      : "공실"
-                  )}
-                </text>
+                {(() => {
+                  const cx = u.x + u.w / 2;
+                  const cy = u.y + u.h / 2;
+                  const fill = calibMode ? "#ef4444" : (u.status === "vacant" ? "#3a444d" : "#13351f");
+                  if (calibMode) {
+                    return (
+                      <text className={styles.unitLabel} x={cx} y={cy} fill={fill} fontSize={12}>
+                        {u.id}
+                      </text>
+                    );
+                  }
+                  const raw = u.tenant ?? "공실";
+                  // 좁은 박스(w<55): 세로 회전 — 사용 가능 길이=h 기준 fontSize 계산
+                  if (u.w < 55) {
+                    const label = raw.length > 6 ? raw.slice(0, 5) + "…" : raw;
+                    const fs = Math.min(15, Math.max(9, Math.floor((u.h - 10) / label.length * 0.95)));
+                    return (
+                      <text
+                        className={styles.unitLabel}
+                        x={cx} y={cy}
+                        fill={fill}
+                        fontSize={fs}
+                        transform={`rotate(90, ${cx}, ${cy})`}
+                      >
+                        {label}
+                      </text>
+                    );
+                  }
+                  // 중간 박스(w 55~90, 4자 초과): 두 줄 — 줄당 글자수 기준 fontSize
+                  if (u.w < 90 && raw.length > 4) {
+                    const mid = Math.ceil(raw.length / 2);
+                    const fs = Math.min(14, Math.max(9, Math.floor((u.w - 8) / mid * 0.85)));
+                    return (
+                      <text className={styles.unitLabel} x={cx} y={cy} fill={fill} fontSize={fs}>
+                        <tspan x={cx} dy={-Math.round(fs * 0.65)}>{raw.slice(0, mid)}</tspan>
+                        <tspan x={cx} dy={Math.round(fs * 1.3)}>{raw.slice(mid)}</tspan>
+                      </text>
+                    );
+                  }
+                  // 넓은 박스: 한 줄 — 글자수 기준 fontSize, 5자 초과 말줄임
+                  const label = raw.length > 5 ? raw.slice(0, 4) + "…" : raw;
+                  const fs = Math.min(15, Math.max(10, Math.floor((u.w - 6) / label.length * 0.95)));
+                  return (
+                    <text className={styles.unitLabel} x={cx} y={cy} fill={fill} fontSize={fs}>
+                      {label}
+                    </text>
+                  );
+                })()}
               </g>
             );
           })}
