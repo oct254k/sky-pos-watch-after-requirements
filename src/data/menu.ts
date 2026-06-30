@@ -152,6 +152,7 @@ export const intMenu: MenuItem[] = [
       { id: "SCR-INT-057", label: "임대물건 합병/분할 관리", path: "/int/scr-int-057", area: "int" },
       { id: "SCR-INT-058", label: "공실 현황 조회", path: "/int/scr-int-058", area: "int" },
       { id: "SCR-INT-059", label: "Space(물리공간) 관리", path: "/int/scr-int-059", area: "int" },
+      { id: "SCR-INT-084", label: "층별 도면 (임대구획 관리)", path: "/int/scr-int-084", area: "int" },
     ],
   },
   {

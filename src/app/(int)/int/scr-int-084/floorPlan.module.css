@@ -1,0 +1,237 @@
+/* 원본 floor-plan.html 도면 스테이지 CSS — 그대로 이식(Tailwind 재작성 금지) */
+
+.stage {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #dde3e9;
+  border-radius: 12px;
+  padding: 10px;
+  overflow: visible;
+  box-shadow: 0 1px 2px rgba(16, 32, 48, 0.04);
+}
+
+.plan {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.unit {
+  cursor: pointer;
+}
+
+.unit :global(rect) {
+  transition: fill-opacity 0.15s, stroke 0.15s, stroke-width 0.1s;
+  fill-opacity: 0.42;
+}
+
+.unit:hover :global(rect) {
+  fill-opacity: 0.62;
+  stroke: #fff;
+  stroke-width: 3px;
+}
+
+.unit:focus-visible :global(rect) {
+  fill-opacity: 0.62;
+  stroke: #fff;
+  stroke-width: 3px;
+}
+
+.unit.dim {
+  opacity: 0.12;
+}
+
+.unit.sel :global(rect) {
+  fill-opacity: 0.7;
+  stroke: #0e8f86;
+  stroke-width: 4px;
+}
+
+.unitLabel {
+  font-size: 15px;
+  font-weight: 700;
+  pointer-events: none;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 3px;
+}
+
+/* 인포카드 */
+.infocard {
+  position: absolute;
+  width: 270px;
+  background: #ffffff;
+  border: 1px solid #dde3e9;
+  border-radius: 12px;
+  box-shadow: 0 14px 44px rgba(16, 32, 48, 0.18);
+  z-index: 50;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.16s, transform 0.16s;
+}
+
+.infocard.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.icHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid #eaeef2;
+}
+
+.icTenant {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.icUnit {
+  font-size: 11px;
+  color: #93a1ad;
+  margin-top: 2px;
+}
+
+.icClose {
+  background: none;
+  border: none;
+  color: #93a1ad;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+
+.icClose:hover {
+  color: #1f2933;
+  background: #f4f6f8;
+}
+
+.icBadge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 5px;
+  margin-top: 7px;
+}
+
+.icBody {
+  padding: 12px 14px;
+}
+
+.icRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  font-size: 12.5px;
+}
+
+.k {
+  color: #93a1ad;
+}
+
+.v {
+  color: #1f2933;
+  font-weight: 600;
+  text-align: right;
+}
+
+.warn {
+  color: #d39423;
+}
+
+.icActions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 14px;
+}
+
+.icBtn {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #0e8f86;
+  background: #0e8f86;
+  color: #fff;
+  font-family: inherit;
+  transition: filter 0.15s;
+}
+
+.icBtn.ghost {
+  background: #fff;
+  color: #0e8f86;
+}
+
+.icBtn:hover {
+  filter: brightness(1.07);
+}
+
+.icBtn:disabled {
+  cursor: not-allowed;
+  filter: none;
+  border-color: #dde3e9;
+  background: #f4f6f8;
+  color: #93a1ad;
+}
+
+.icBtn:focus-visible {
+  outline: 2px solid #0e8f86;
+  outline-offset: 1px;
+}
+
+.icVacantNote {
+  padding: 4px 0 2px;
+  font-size: 12px;
+  color: #5b6b7a;
+}
+
+/* 범례 */
+.legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid #dde3e9;
+  border-radius: 12px;
+  font-size: 12.5px;
+  box-shadow: 0 1px 2px rgba(16, 32, 48, 0.04);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #5b6b7a;
+}
+
+.legendSwatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legendCount {
+  color: #93a1ad;
+  font-size: 11px;
+}
+
+@media (max-width: 560px) {
+  .infocard {
+    width: calc(100vw - 56px);
+  }
+}
